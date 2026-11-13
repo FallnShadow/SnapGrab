@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d18">
+  <title>SnapGrab - Video Downloader</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #080d18;
+      color: #f1f5f9;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      padding: 24px 8%;
+      font-size: 27px;
+      font-weight: bold;
+      color: #38bdf8;
+    }
+    main {
+      max-width: 750px;
+      margin: 95px auto;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 { font-size: 42px; margin-bottom: 12px; }
+    h1 span { color: #38bdf8; }
+    p { color: #94a3b8; line-height: 1.7; }
+    .search {
+      display: flex;
+      gap: 10px;
+      margin: 30px 0;
+    }
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 17px;
+      border-radius: 10px;
+      border: 1px solid #26364c;
+      background: #111c2d;
+      color: white;
+      font-size: 15px;
+    }
+    button {
+      background: #0284c7;
+      color: white;
+      border: 0;
+      padding: 15px 23px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background: #0369a1; }
+    .instructions {
+      text-align: left;
+      background: #111c2d;
+      padding: 22px;
+      border-radius: 13px;
+      margin-top: 35px;
+    }
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #64748b;
+    }
+    a { color: #38bdf8; text-decoration: none; }
+    @media(max-width:550px) {
+      .search { flex-direction: column; }
+      h1 { font-size: 33px; }
+      main { margin-top: 55px; }
+    }
+  </style>
+</head>
+<body>
+  <header>⬇ SnapGrab</header>
+
+  <main>
+    <h1>Download Videos <span>Instantly.</span></h1>
+    <p>Paste a supported video URL to explore available previews and download options.</p>
+
+    <div class="search">
+      <input id="videoUrl" type="url"
+        placeholder="Paste your video URL here...">
+      <button onclick="getVideo()">Get Video</button>
+    </div>
+
+    <div id="result"></div>
+
+    <section class="instructions">
+      <h3>How to use SnapGrab</h3>
+      <p>1. Open your preferred social media platform.</p>
+      <p>2. Copy the video URL.</p>
+      <p>3. Paste the URL above.</p>
+      <p>4. Click Get Video.</p>
+      <p>5. Preview and select an available format.</p>
+    </section>
+  </main>
+
+  <footer>
+    <a href="privacy.html">Privacy Policy</a>
+    <p>© 2026 SnapGrab. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const API = "https://black-pine-0685.rahilareshe.workers.dev";
+
+    async function getVideo() {
+      const url = document.getElementById("videoUrl").value.trim();
+      const result = document.getElementById("result");
+
+      if (!url) {
+        result.textContent = "Please enter a video URL.";
+        return;
+      }
+
+      result.textContent = "Checking URL...";
+
+      try {
+        const response = await fetch(API + "/api/info", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url })
+        });
+
+        const data = await response.json();
+        result.textContent = data.message || data.error || "Request completed.";
+      } catch {
+        result.textContent = "Unable to connect to SnapGrab server.";
+      }
+    }
+  </script>
+</body>
+</html>
